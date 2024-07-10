@@ -13,7 +13,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
-import com.example.lisaapp.sub.SSHConnect
+import com.example.lisaapp.sub.SSHConnectShell
 import com.example.lisaapp.sub.ShowToastPopup
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -112,7 +112,7 @@ class PopupFragment3 : DialogFragment(), TextToSpeech.OnInitListener {
         GlobalScope.launch(Dispatchers.Main) {
             val result = withContext(Dispatchers.IO) {
 
-                SSHConnect().connectSSH(command) // Call the suspend function here
+                SSHConnectShell().connectSSH(command) // Call the suspend function here
             }
             // Handle the result here
             Log.d(ContentValues.TAG, "SSH output: $result")

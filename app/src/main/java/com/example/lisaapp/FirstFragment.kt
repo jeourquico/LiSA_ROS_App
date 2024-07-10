@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.lisaapp.databinding.FragmentFirstBinding
-import com.example.lisaapp.sub.SSHConnect
+import com.example.lisaapp.sub.SSHConnectExec
 import com.example.lisaapp.sub.ShowToastPopup
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -60,7 +60,7 @@ class FirstFragment : Fragment() {
         GlobalScope.launch(Dispatchers.Main) {
             val result = withContext(Dispatchers.IO) {
 
-                SSHConnect().connectSSH(command) // Call the suspend function here
+                SSHConnectExec().connectSSH(command) // Call the suspend function here
             }
             // Handle the result here
             Log.d(ContentValues.TAG, "SSH output: $result")

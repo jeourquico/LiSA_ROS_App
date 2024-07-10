@@ -14,7 +14,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.example.lisaapp.sub.SSHConnect
+import com.example.lisaapp.sub.SSHConnectExec
 import com.example.lisaapp.sub.ShowToastPopup
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -107,14 +107,14 @@ class ConnectionCredentialsSSH : Fragment() {
         GlobalScope.launch(Dispatchers.Main) {
             val result = withContext(Dispatchers.IO) {
 
-                SSHConnect().connectSSH(command) // Call the suspend function here
+                SSHConnectExec().connectSSH(command) // Call the suspend function here
             }
             // Handle the result here
             Log.d(ContentValues.TAG, "SSH output: $result")
 
             //show messages or connection status
             // change to (result == "true") after debug
-            if (result == "true") {
+            if (result != "true") {
                 // Proceed to next fragment and Initialize ROS
                 ShowToastPopup(
                     (context as Activity),

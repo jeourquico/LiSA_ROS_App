@@ -121,7 +121,7 @@ class PopupFragment3 : DialogFragment(), TextToSpeech.OnInitListener {
             ShowToastPopup(requireContext(),layoutInflater).showToast(result)
 
             // change to (result == "true") after debug
-            if(result == "true") {
+            if(result != "true") {
                 dismiss()
             }
         }

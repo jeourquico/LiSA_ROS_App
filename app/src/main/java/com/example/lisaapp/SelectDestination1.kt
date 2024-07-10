@@ -92,7 +92,7 @@ class SelectDestination1(private val goToString: String) : DialogFragment(), Tex
             ShowToastPopup(requireContext(),layoutInflater).showToast(result)
 
             // change to (result == "true") after debug
-            if (result == "true") {
+            if (result != "true") {
                 dismiss()
                 val showPopup = PopupFragment2(goToString)
                 showPopup.show((activity as AppCompatActivity).supportFragmentManager, "showPopup")

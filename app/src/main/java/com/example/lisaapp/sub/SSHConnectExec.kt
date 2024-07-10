@@ -36,7 +36,7 @@ class SSHConnectExec {
                 session.setConfig(config)
 
                 // Connect to SSH server
-                session.connect(3000)
+                session.connect(100)
 
                 // Execute a command over SSH
                 //val command = "ls -l"
@@ -63,7 +63,7 @@ class SSHConnectExec {
                 channel.outputStream = outputStream
                 channel.connect()
                 while (!channel.isClosed) {
-                    Thread.sleep(1000)
+                    Thread.sleep(100)
                 }
                 channel.disconnect()
             } catch (e: Exception) {

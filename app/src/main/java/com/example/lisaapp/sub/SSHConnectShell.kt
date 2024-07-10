@@ -36,7 +36,7 @@ class SSHConnectShell {
                 session.setConfig(config)
 
                 // Connect to SSH server
-                session.connect(3000)
+                session.connect(100)
 
                 // Execute a command over SSH
                 //val command = "ls -l"

@@ -2,14 +2,20 @@ package com.example.lisaapp.sub
 
 import com.example.lisaapp.ConnectionCredentialsSSH
 import com.jcraft.jsch.ChannelExec
+import com.jcraft.jsch.ChannelShell
 import com.jcraft.jsch.JSch
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
+import java.io.BufferedReader
 import java.io.ByteArrayOutputStream
+import java.io.InputStreamReader
 import java.util.Properties
 
 class SSHConnect () {
 
+    private val disconnectSignal = CompletableDeferred<Unit>()
     suspend fun connectSSH(command: String): String {
         return withContext(Dispatchers.IO) {
             try {
@@ -48,22 +54,39 @@ class SSHConnect () {
     }
 
 
-    private suspend fun executeCommand(session: com.jcraft.jsch.Session, command: String): String {
-        return withContext(Dispatchers.IO) {
-            val outputStream = ByteArrayOutputStream()
+    private suspend fun executeCommand(session: com.jcraft.jsch.Session, command: String) {
+        withContext(Dispatchers.IO) {
+            val channel = session.openChannel("shell") as ChannelShell
+            val outputStream = channel.outputStream
+            val inputStream = channel.inputStream
+            val writer = outputStream.bufferedWriter()
+            val reader = BufferedReader(InputStreamReader(inputStream))
             try {
-                val channel = session.openChannel("exec") as ChannelExec
-                channel.setCommand(command)
-                channel.outputStream = outputStream
                 channel.connect()
-                while (!channel.isClosed) {
-                    Thread.sleep(100)
+
+                // Send command
+                writer.write("$command\n")
+                writer.flush()
+
+                // Read output
+                while (!disconnectSignal.isCompleted) {
+                    val line = reader.readLine()
+                    if (line != null) {
+                        println("SSH Output: $line")
+                    } else {
+                        break // Break the loop when no more output is available
+                    }
+                    delay(10) // Adjust delay as needed
                 }
-                channel.disconnect()
             } catch (e: Exception) {
-                "Error executing command: ${e.message}"
+                println("Error executing command: ${e.message}")
+            } finally {
+                writer.close()
+                outputStream.close()
+                inputStream.close()
+                reader.close()
+                channel.disconnect()
             }
-            outputStream.toString()
         }
     }
 

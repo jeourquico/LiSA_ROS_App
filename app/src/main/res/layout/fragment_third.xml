@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ThirdFragment"
+    android:id="@+id/thirdFragmentLayout"
+    android:hardwareAccelerated="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+
+            <ImageView
+                android:id="@+id/rosMapZone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="0dp"
+                android:layout_marginBottom="0dp"
+                android:contentDescription="Map Image"
+                android:gravity="center"
+                android:src="@drawable/ros_map_demo" />
+
+            <ImageButton
+                android:id="@+id/btn_selectDestinationNum1"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="250dp"
+                android:layout_marginTop="330dp"
+                android:layout_marginEnd="60dp"
+                android:background="?android:selectableItemBackground"
+                android:backgroundTint="@null"
+                android:clickable="true"
+                android:contentDescription="goal.py"
+                android:focusable="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/pin_1" />
+
+            <ImageButton
+                android:id="@+id/btn_selectDestinationNum2"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="170dp"
+                android:layout_marginTop="340dp"
+                android:layout_marginEnd="60dp"
+                android:background="?android:selectableItemBackground"
+                android:backgroundTint="@null"
+                android:clickable="true"
+                android:contentDescription="goal1.py"
+                android:focusable="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/pin_2" />
+
+            <ImageButton
+                android:id="@+id/btn_selectDestinationNum3"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center_vertical"
+                android:background="?android:selectableItemBackground"
+                android:backgroundTint="@null"
+                android:layout_marginStart="160dp"
+                android:layout_marginTop="250dp"
+                android:layout_marginEnd="60dp"
+                android:clickable="true"
+                android:contentDescription="goal2.py"
+                android:focusable="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/pin_3" />
+
+            <ImageButton
+                android:id="@+id/btn_selectDestinationNum4"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center_vertical"
+                android:background="?android:selectableItemBackground"
+                android:backgroundTint="@null"
+                android:layout_marginStart="200dp"
+                android:layout_marginTop="190dp"
+                android:layout_marginEnd="60dp"
+                android:clickable="true"
+                android:contentDescription="goal3.py"
+                android:focusable="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/pin_4" />
+
+            <ImageButton
+                android:id="@+id/btn_selectDestinationNum5"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="130dp"
+                android:layout_marginTop="210dp"
+                android:layout_marginEnd="60dp"
+                android:background="?android:selectableItemBackground"
+                android:backgroundTint="@null"
+                android:clickable="true"
+                android:contentDescription="pose.py"
+                android:focusable="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/pin" />
+
+        </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/third_connL2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="0dp"
+        android:background="#0A000000"
+        >
+
+        <ImageButton
+            android:id="@+id/btn_selectDestination"
+            android:layout_width="108dp"
+            android:layout_height="108dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="60dp"
+            android:contentDescription="button 1"
+            android:scaleType="fitXY"
+            android:gravity="start"
+            android:src="@drawable/route"
+            android:background="?android:selectableItemBackground"
+            android:backgroundTint="@null"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <ImageButton
+            android:id="@+id/btn_start_stop"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="80dp"
+            android:scaleType="centerCrop"
+            android:contentDescription="return home"
+            android:gravity="center"
+            android:src="@drawable/stop_button"
+            android:background="?android:selectableItemBackground"
+            android:backgroundTint="@null"
+            android:clickable="true"
+            android:focusable="true"/>
+
+        <ImageButton
+            android:id="@+id/btn_homingROS"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_marginEnd="60dp"
+            android:scaleType="centerCrop"
+            android:contentDescription="quit"
+            android:gravity="end"
+            android:src="@drawable/quit"
+            android:background="?android:selectableItemBackground"
+            android:backgroundTint="@null"
+            android:clickable="true"
+            android:focusable="true"/>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

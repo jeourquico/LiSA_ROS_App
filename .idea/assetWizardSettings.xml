@@ -80,8 +80,9 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
-                                                <entry key="imagePath" value="$USER_HOME$/Desktop/Screenshot 2024-07-15 at 12.00.53 PM.png" />
-                                                <entry key="scalingPercent" value="110" />
+                                                <entry key="imagePath" value="$USER_HOME$/Downloads/wetransfer_lisa-robot-3-png_2024-07-15_1234/lisa robot - 3.png" />
+                                                <entry key="scalingPercent" value="112" />
+                                                <entry key="trimmed" value="true" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -113,7 +114,7 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="outputName" value="ros_logo_launcher" />
+                                      <entry key="outputName" value="lisa_robot_launcher" />
                                       <entry key="showGrid" value="true" />
                                     </map>
                                   </option>

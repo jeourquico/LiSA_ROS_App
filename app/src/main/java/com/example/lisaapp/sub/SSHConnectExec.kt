@@ -2,15 +2,10 @@ package com.example.lisaapp.sub
 
 import com.example.lisaapp.ConnectionCredentialsSSH
 import com.jcraft.jsch.ChannelExec
-import com.jcraft.jsch.ChannelShell
 import com.jcraft.jsch.JSch
-import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
-import java.io.BufferedReader
 import java.io.ByteArrayOutputStream
-import java.io.InputStreamReader
 import java.util.Properties
 
 class SSHConnectExec {

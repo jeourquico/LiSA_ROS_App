@@ -72,8 +72,8 @@ class PopupFragment2 (private val goToString: String) : DialogFragment(), TextTo
                 Log.i("TTS", "TextToSpeech Initialized")
 
                 // Change voice characteristics here
-                val pitch = 0.8f // Change pitch level
-                val speed = 0.7f // Change speech speed
+                val pitch = 1.2f // Change pitch level
+                val speed = 0.8f // Change speech speed
 
                 val voice = Voice(null, Locale.US, Voice.QUALITY_HIGH, Voice.LATENCY_NORMAL, false, null)
                 tts.voice = voice

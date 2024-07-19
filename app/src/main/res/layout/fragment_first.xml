@@ -8,25 +8,13 @@
     android:id="@+id/firstFragmentLayout"
     tools:ignore="ExtraText">
 
-    <LinearLayout
-        android:id="@+id/first_connL1"
+    <ImageView
+        android:id="@+id/welcomeImage"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/first_connL2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <ImageView
-            android:id="@+id/welcomeImage"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:layout_margin="60dp"
-            android:src="@drawable/welcome" />
-
-    </LinearLayout>
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_marginTop="50dp"
+        android:src="@drawable/lisa_robot_welcome" />
 
     <LinearLayout
         android:id="@+id/first_connL2"
@@ -46,7 +34,7 @@
             android:layout_margin="20dp"
             android:gravity="center"
             android:text="@string/connect_to_ros"
-            android:textSize="18sp"/>
+            android:textSize="18sp" />
 
     </LinearLayout>
 

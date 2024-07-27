@@ -2,15 +2,21 @@ package com.example.lisaapp
 
 import android.annotation.SuppressLint
 import android.content.ContentValues
+import android.content.Intent
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.example.lisaapp.databinding.FragmentThirdBinding
-import com.example.lisaapp.sub.SSHConnectShell
+import com.example.lisaapp.sub.SSHConnect
+import com.example.lisaapp.sub.SSHViewModel
 import com.example.lisaapp.sub.ShowToastPopup
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -18,9 +24,14 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+
 class ThirdFragment : Fragment() {
 
     private var _binding: FragmentThirdBinding? = null
+    private val fromBottom : Animation by lazy { AnimationUtils.loadAnimation(requireContext(), R.anim.from_bottom_anim) }
+    private val toBottom : Animation by lazy { AnimationUtils.loadAnimation(requireContext(), R.anim.to_bottom_anim) }
+
+    private var clicked = false
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -40,11 +51,32 @@ class ThirdFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Floating App Bar function
+        binding.lisaFab.setOnClickListener {
+            onLisaFabButtonClicked()
+        }
+
+        binding.firstActionFab.setOnClickListener {
+            ShowToastPopup(requireContext(),layoutInflater).showToast("Button for change language")
+        }
+
+        binding.secondActionFab.setOnClickListener {
+            ShowToastPopup(requireContext(),layoutInflater).showToast("Button for roam")
+        }
+
+        binding.thirdActionFab.setOnClickListener {
+            ShowToastPopup(requireContext(),layoutInflater).showToast("Extra button")
+        }
+
+        binding.callFab.setOnClickListener {
+            openContactsApp()
+        }
+
         // TOP CLICKBAITS
         // rosrun 1st nav point
         binding.btnSelectDestinationNum1.setOnClickListener {
             // pop up "going to ..."
-            val showPopup = SelectDestination1("goal")
+            val showPopup = SelectDestination1("goal", "Location 1")
             showPopup.show((activity as AppCompatActivity).supportFragmentManager, "showPopup")
 
         }
@@ -52,7 +84,7 @@ class ThirdFragment : Fragment() {
         // rosrun 2nd nav point
         binding.btnSelectDestinationNum2.setOnClickListener {
             // pop up "going to ..."
-            val showPopup = SelectDestination1("goal1")
+            val showPopup = SelectDestination1("goal1", "Location 2")
             showPopup.show((activity as AppCompatActivity).supportFragmentManager, "showPopup")
 
         }
@@ -60,7 +92,7 @@ class ThirdFragment : Fragment() {
         // rosrun 3rd nav point
         binding.btnSelectDestinationNum3.setOnClickListener {
             // pop up "going to ..."
-            val showPopup = SelectDestination1("goal2")
+            val showPopup = SelectDestination1("goal2", "Location 3")
             showPopup.show((activity as AppCompatActivity).supportFragmentManager, "showPopup")
 
         }
@@ -68,7 +100,7 @@ class ThirdFragment : Fragment() {
         // rosrun 4th nav point
         binding.btnSelectDestinationNum4.setOnClickListener {
             // pop up "going to ..."
-            val showPopup = SelectDestination1("goal3")
+            val showPopup = SelectDestination1("goal3", "Location 4")
             showPopup.show((activity as AppCompatActivity).supportFragmentManager, "showPopup")
 
         }
@@ -76,27 +108,11 @@ class ThirdFragment : Fragment() {
         // rosrun pose nav point
         binding.btnSelectDestinationNum5.setOnClickListener {
             // pop up "going to ..."
-            val showPopup = SelectDestination1("pose")
+            val showPopup = SelectDestination1("pose", "Home Position")
             showPopup.show((activity as AppCompatActivity).supportFragmentManager, "showPopup")
 
         }
 
-        // BOTTOM CLICKBAITS
-        // rosrun roam selection
-        binding.btnSelectDestination.setOnClickListener {
-            // opens fragment to roam selector
-            //findNavController().navigate(R.id.action_ThirdFragment_to_roamSelector)
-            // temporary function. uses roam.py command
-            connectSSHinBG("rosrun lisa roam.py")
-        }
-
-        binding.btnStartStop.setOnClickListener {
-            // sends stop code to ROS. This stops the ROS after completing its current goal point
-            connectSSHinBG("rosrun lisa stop.py")
-        }
-        binding.btnHomingROS.setOnClickListener {
-            activity?.finish()
-        }
     }
 
     override fun onDestroyView() {
@@ -104,20 +120,55 @@ class ThirdFragment : Fragment() {
         _binding = null
     }
 
-    //SSH Connection
-    @OptIn(DelicateCoroutinesApi::class)
-    fun connectSSHinBG(command: String) {
-        GlobalScope.launch(Dispatchers.Main) {
-            val result = withContext(Dispatchers.IO) {
+    private fun onLisaFabButtonClicked() {
+        setVisibility(clicked)
+        setAnimation(clicked)
+        setClickable(clicked)
+        clicked = !clicked
+    }
 
-                SSHConnectShell().connectSSH(command) // Call the suspend function here
-            }
-            // Handle the result here
-            Log.d(ContentValues.TAG, "SSH output: $result")
-
-            //show messages or connection status
-            ShowToastPopup(requireContext(),layoutInflater).showToast(result)
+    private fun setAnimation(clicked: Boolean) {
+        if(!clicked) {
+            binding.firstActionFab.visibility = View.VISIBLE
+            binding.secondActionFab.visibility = View.VISIBLE
+            binding.thirdActionFab.visibility = View.VISIBLE
+        } else {
+            binding.firstActionFab.visibility = View.INVISIBLE
+            binding.secondActionFab.visibility = View.INVISIBLE
+            binding.thirdActionFab.visibility = View.INVISIBLE
         }
     }
+
+    private fun setVisibility(clicked: Boolean) {
+        if(!clicked) {
+            binding.firstActionFab.startAnimation(fromBottom)
+            binding.secondActionFab.startAnimation(fromBottom)
+            binding.thirdActionFab.startAnimation(fromBottom)
+        } else {
+            binding.firstActionFab.startAnimation(toBottom)
+            binding.secondActionFab.startAnimation(toBottom)
+            binding.thirdActionFab.startAnimation(toBottom)
+        }
+    }
+
+    private fun setClickable(clicked: Boolean) {
+        if(!clicked) {
+            binding.firstActionFab.isClickable = true
+            binding.secondActionFab.isClickable = true
+            binding.thirdActionFab.isClickable = true
+        } else {
+            binding.firstActionFab.isClickable = false
+            binding.secondActionFab.isClickable = false
+            binding.thirdActionFab.isClickable = false
+        }
+    }
+
+    private fun openContactsApp() {
+        val intent = Intent(Intent.ACTION_VIEW, ContactsContract.Contacts.CONTENT_URI)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+    }
 }
+
+
 

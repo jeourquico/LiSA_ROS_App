@@ -35,7 +35,7 @@
 
     <fragment
         android:id="@+id/connectionCredentialsSSH"
-        android:name="com.example.lisaapp.ConnectionCredentialsSSH"
+        android:name="com.example.lisaapp.sub.ConnectionCredentialsSSH"
         android:label="fragment_connection_credentials_ssh"
         tools:layout="@layout/fragment_connection_credentials_ssh" >
         <action

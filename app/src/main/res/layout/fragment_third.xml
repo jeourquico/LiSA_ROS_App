@@ -11,7 +11,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            >
+            android:gravity="center">
 
             <ImageView
                 android:id="@+id/rosMapZone"
@@ -92,8 +92,8 @@
 
             <ImageButton
                 android:id="@+id/btn_selectDestinationNum5"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="130dp"
                 android:layout_marginTop="210dp"
@@ -104,65 +104,85 @@
                 android:contentDescription="pose.py"
                 android:focusable="true"
                 android:scaleType="fitXY"
-                android:src="@drawable/pin" />
+                android:src="@drawable/home_icon_yellow" />
 
         </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/third_connL2"
-        android:layout_width="match_parent"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/call_fab"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="24dp"
+        android:scaleX="1.1"
+        android:scaleY="1.1"
+        android:backgroundTint="@color/UST_yellow"
+        android:focusable="true"
+        android:clickable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/person_call" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/lisa_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        android:scaleX="1.1"
+        android:scaleY="1.1"
+        android:backgroundTint="@color/UST_yellow"
+        android:focusable="true"
+        android:clickable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="0dp"
-        android:background="#0A000000"
-        >
+        app:srcCompat="@drawable/lisa_ros_action_logo" />
 
-        <ImageButton
-            android:id="@+id/btn_selectDestination"
-            android:layout_width="108dp"
-            android:layout_height="108dp"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="60dp"
-            android:contentDescription="button 1"
-            android:scaleType="fitXY"
-            android:gravity="start"
-            android:src="@drawable/route"
-            android:background="?android:selectableItemBackground"
-            android:backgroundTint="@null"
-            android:clickable="true"
-            android:focusable="true" />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/first_action_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="@color/UST_yellow_90"
+        android:visibility="invisible"
+        android:focusable="true"
+        android:clickable="true"
+        app:layout_constraintBottom_toTopOf="@id/lisa_fab"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/language_icon" />
 
-        <ImageButton
-            android:id="@+id/btn_start_stop"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginEnd="80dp"
-            android:scaleType="centerCrop"
-            android:contentDescription="return home"
-            android:gravity="center"
-            android:src="@drawable/stop_button"
-            android:background="?android:selectableItemBackground"
-            android:backgroundTint="@null"
-            android:clickable="true"
-            android:focusable="true"/>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/second_action_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="@color/UST_yellow_90"
+        android:visibility="invisible"
+        android:focusable="true"
+        android:clickable="true"
+        app:layout_constraintBottom_toTopOf="@id/first_action_fab"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/route_logo" />
 
-        <ImageButton
-            android:id="@+id/btn_homingROS"
-            android:layout_width="55dp"
-            android:layout_height="55dp"
-            android:layout_marginEnd="60dp"
-            android:scaleType="centerCrop"
-            android:contentDescription="quit"
-            android:gravity="end"
-            android:src="@drawable/quit"
-            android:background="?android:selectableItemBackground"
-            android:backgroundTint="@null"
-            android:clickable="true"
-            android:focusable="true"/>
-    </LinearLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/third_action_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="@color/UST_yellow_90"
+        android:visibility="invisible"
+        android:focusable="true"
+        android:clickable="true"
+        app:layout_constraintBottom_toTopOf="@id/second_action_fab"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_launcher_foreground" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

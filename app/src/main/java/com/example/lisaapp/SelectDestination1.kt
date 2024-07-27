@@ -3,8 +3,6 @@ package com.example.lisaapp
 import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.os.Bundle
-import android.speech.tts.TextToSpeech
-import android.speech.tts.Voice
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,23 +11,29 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
-import com.example.lisaapp.sub.SSHConnectShell
+import androidx.fragment.app.activityViewModels
+import com.example.lisaapp.sub.SSHConnect
+import com.example.lisaapp.sub.SSHViewModel
 import com.example.lisaapp.sub.ShowToastPopup
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.Locale
 
 
-class SelectDestination1(private val goToString: String) : DialogFragment(), TextToSpeech.OnInitListener {
+class SelectDestination1(private val goToString: String, private val locationText: String) : DialogFragment() {
 
-    private lateinit var tts: TextToSpeech
+    private val sshViewModel: SSHViewModel by activityViewModels()
+
+    private val dialog = "Go to $locationText? Is this correct. Click 'yes' if correct, and 'no' if you want to go somewhere else."
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        // Speak out dialog
+        (activity as? MainActivity)?.dialogText?.value = dialog
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_selectdestination_1, container, false)
     }
@@ -42,23 +46,12 @@ class SelectDestination1(private val goToString: String) : DialogFragment(), Tex
         val btnYes = view.findViewById<Button>(R.id.btn_yes)
         val btnNo = view.findViewById<Button>(R.id.btn_no)
 
-        // Initialize TextToSpeech
-        tts = TextToSpeech(requireContext(), this)
-
         // Text to display on floating window
-        destinationText.text = "Go to $goToString?"
-
+        destinationText.text = "Go to $locationText?"
 
         // send goal commands to LiSA ROS
         btnYes.setOnClickListener {
             connectSSHinBG("rosrun lisa $goToString.py")
-//            when (goToString) {
-//                "goal" -> connectSSHinBG("rosrun lisa goal.py")
-//                "goal1" -> connectSSHinBG("rosrun lisa goal1.py")
-//                "goal2" -> connectSSHinBG("rosrun lisa goal2.py")
-//                "goal3" -> connectSSHinBG("rosrun lisa goal3.py")
-//                "pose" -> connectSSHinBG("rosrun lisa pose.py")
-//            }
         }
 
         // Dismiss floating window
@@ -68,12 +61,9 @@ class SelectDestination1(private val goToString: String) : DialogFragment(), Tex
     }
 
     override fun onDestroy() {
-        // Shutdown TextToSpeech when the fragment is destroyed
-        if (::tts.isInitialized) {
-            tts.stop()
-            tts.shutdown()
-        }
         super.onDestroy()
+        // StopTextToSpeech when the fragment is destroyed
+        (activity as? MainActivity)?.ttsStop()
     }
 
     //SSH Connection
@@ -81,56 +71,35 @@ class SelectDestination1(private val goToString: String) : DialogFragment(), Tex
     fun connectSSHinBG(command: String) {
         GlobalScope.launch(Dispatchers.Main) {
             val result = withContext(Dispatchers.IO) {
-
-                SSHConnectShell().connectSSH(command) // Call the suspend function here
+                SSHConnect(sshViewModel).connectSSH(command, "shell") // Call the suspend function here
             }
             // Handle the result here
-            Log.d(ContentValues.TAG, "SSH output: $result")
-            //show messages or connection status
-            // change to (result == "true") after debug
+            // Ensure the fragment is still attached before proceeding
+            if (isAdded) {
+                handleSSHResult(result)
+            }
+        }
+    }
 
-            ShowToastPopup(requireContext(),layoutInflater).showToast(result)
-
-            // change to (result == "true") after debug
+    private fun handleSSHResult(result: String) {
+        // Ensure the fragment is still attached before accessing context
+        if (isAdded) {
+            // Handle the result of the SSH command, possibly updating LiveData or UI elements
             if (result != "true") {
+                // Proceed to next fragment and Initialize ROS
+                Log.d(ContentValues.TAG, "SSH output: $result")
+                // Show a toast message
+                ShowToastPopup(requireContext(),layoutInflater).showToast(result)
+                // Move to next fragment. Move this to true case once done debug or during testing
                 dismiss()
-                val showPopup = PopupFragment2(goToString)
+                val showPopup = PopupFragment2(goToString, locationText)
                 showPopup.show((activity as AppCompatActivity).supportFragmentManager, "showPopup")
-            }
-        }
-    }
-
-    override fun onInit(status: Int) {
-        if (status == TextToSpeech.SUCCESS) {
-            val result = tts.setLanguage(Locale.US)
-
-            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                Log.e("TTS", "The Language specified is not supported!")
             } else {
-                Log.i("TTS", "TextToSpeech Initialized")
-
-                // Change voice characteristics here
-                val pitch = 1.2f // Change pitch level
-                val speed = 0.8f // Change speech speed
-
-                val voice = Voice(null, Locale.US, Voice.QUALITY_HIGH, Voice.LATENCY_NORMAL, false, null)
-                tts.voice = voice
-
-                tts.setPitch(pitch)
-                tts.setSpeechRate(speed)
-
-                // Now you can use the TTS engine
+                ShowToastPopup(requireActivity(), layoutInflater).showToast(result)
             }
-        } else {
-            Log.e("TTS", "Initialization Failed!")
         }
-        // Speak the destination text
-        speakOut("Go to $goToString? Is this correct. Click 'yes' if correct and 'no' if you want to go somewhere else.")
     }
 
-    private fun speakOut(text: String) {
-        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "")
-    }
 
 }
 

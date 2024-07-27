@@ -13,7 +13,9 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
-import com.example.lisaapp.sub.SSHConnectShell
+import androidx.fragment.app.activityViewModels
+import com.example.lisaapp.sub.SSHConnect
+import com.example.lisaapp.sub.SSHViewModel
 import com.example.lisaapp.sub.ShowToastPopup
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -23,18 +25,22 @@ import kotlinx.coroutines.withContext
 import java.util.Locale
 
 
-class PopupFragment3 : DialogFragment(), TextToSpeech.OnInitListener {
+class PopupFragment3 : DialogFragment() {
 
     private lateinit var tts: TextToSpeech
     private lateinit var btnYes : Button
     private lateinit var  btnNo : Button
     private lateinit var  dialogText : TextView
+    private val sshViewModel: SSHViewModel by activityViewModels()
 
+    val dialog = "Do you want to go somewhere else? "
     val homePositionText = "Moving back to Home Position"
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        (activity as? MainActivity)?.dialogText?.value = dialog
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_popup3, container, false)
     }
@@ -47,10 +53,7 @@ class PopupFragment3 : DialogFragment(), TextToSpeech.OnInitListener {
         btnNo = view.findViewById(R.id.btn_no)
         dialogText = view.findViewById((R.id.toDestination))
 
-        dialogText.text = "Do you want to go somewhere else? "
-
-        tts = TextToSpeech(requireContext(), this)
-
+        dialogText.text = dialog
 
         // Dismiss pop up and goes back to selection
         btnYes.setOnClickListener {
@@ -60,50 +63,13 @@ class PopupFragment3 : DialogFragment(), TextToSpeech.OnInitListener {
         // Returns to home
         btnNo.setOnClickListener {
             connectSSHinBG("rosrun lisa pose.py")
-            val showPopup = PopupFragment2(homePositionText)
-            showPopup.show((activity as AppCompatActivity).supportFragmentManager, "showPopup")
         }
     }
 
     override fun onDestroy() {
-        // Shutdown TextToSpeech when the fragment is destroyed
-        if (::tts.isInitialized) {
-            tts.stop()
-            tts.shutdown()
-        }
         super.onDestroy()
-    }
-
-    override fun onInit(status: Int) {
-        if (status == TextToSpeech.SUCCESS) {
-            val result = tts.setLanguage(Locale.US)
-
-            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                Log.e("TTS", "The Language specified is not supported!")
-            } else {
-                Log.i("TTS", "TextToSpeech Initialized")
-
-                // Change voice characteristics here
-                val pitch = 1.2f // Change pitch level
-                val speed = 0.8f // Change speech speed
-
-                val voice = Voice(null, Locale.US, Voice.QUALITY_HIGH, Voice.LATENCY_NORMAL, false, null)
-                tts.voice = voice
-
-                tts.setPitch(pitch)
-                tts.setSpeechRate(speed)
-
-                // Now you can use the TTS engine
-            }
-        } else {
-            Log.e("TTS", "Initialization Failed!")
-        }
-        // Speak the destination text
-        speakOut(dialogText.text.toString())
-    }
-
-    private fun speakOut(text: String) {
-        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "")
+        // StopTextToSpeech when the fragment is destroyed
+        (activity as? MainActivity)?.ttsStop()
     }
 
     //SSH Connections logic
@@ -111,18 +77,30 @@ class PopupFragment3 : DialogFragment(), TextToSpeech.OnInitListener {
     fun connectSSHinBG(command: String) {
         GlobalScope.launch(Dispatchers.Main) {
             val result = withContext(Dispatchers.IO) {
-
-                SSHConnectShell().connectSSH(command) // Call the suspend function here
+                SSHConnect(sshViewModel).connectSSH(command, "shell") // Call the suspend function here
             }
             // Handle the result here
-            Log.d(ContentValues.TAG, "SSH output: $result")
+            if (isAdded) {
+                handleSSHResult(result)
+            }
+        }
+    }
 
-            //show messages or connection status
-            ShowToastPopup(requireContext(),layoutInflater).showToast(result)
-
-            // change to (result == "true") after debug
-            if(result != "true") {
+    private fun handleSSHResult(result: String) {
+        // Ensure the fragment is still attached before accessing context
+        if (isAdded) {
+            // Handle the result of the SSH command, possibly updating LiveData or UI elements
+            if (result != "true") {
+                // Proceed to next fragment and Initialize ROS
+                Log.d(ContentValues.TAG, "SSH output: $result")
+                // Show a toast message
+                ShowToastPopup(requireContext(),layoutInflater).showToast(result)
+                // Move to next fragment. Move this to true case once done debug or during testing
                 dismiss()
+                val showPopup = PopupFragment2(homePositionText, null.toString())
+                showPopup.show((activity as AppCompatActivity).supportFragmentManager, "showPopup")
+            } else {
+                ShowToastPopup(requireActivity(), layoutInflater).showToast(result)
             }
         }
     }

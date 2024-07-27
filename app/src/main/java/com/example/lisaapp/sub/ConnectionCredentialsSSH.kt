@@ -1,11 +1,8 @@
-package com.example.lisaapp
+package com.example.lisaapp.sub
 
-import android.app.Activity
-import android.content.ContentValues
 import android.os.Bundle
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,20 +10,15 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.example.lisaapp.sub.SSHConnectExec
-import com.example.lisaapp.sub.ShowToastPopup
-import kotlinx.coroutines.DelicateCoroutinesApi
+import com.example.lisaapp.R
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class ConnectionCredentialsSSH : Fragment() {
-
-    var ipAddressSSH = "192.168.1.100"
-    var usernameSSH = "lisa"
-    var passwordSSH = "lisa1234"
 
     private lateinit var ipAddressNew: EditText
     private lateinit var usernameNew: EditText
@@ -35,6 +27,8 @@ class ConnectionCredentialsSSH : Fragment() {
     private lateinit var ivTogglePasswordVisibility: ImageView
 
     private var isPasswordVisible = false
+
+    private val sshViewModel: SSHViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,6 +41,7 @@ class ConnectionCredentialsSSH : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Initialize the lateinit properties
         ipAddressNew = view.findViewById(R.id.IpaddressEdit)
         usernameNew = view.findViewById(R.id.UsernameEdit)
         passwordNew = view.findViewById(R.id.PasswordEdit)
@@ -54,14 +49,14 @@ class ConnectionCredentialsSSH : Fragment() {
         ivTogglePasswordVisibility = view.findViewById(R.id.ivTogglePasswordVisibility)
 
         // Set hint texts to EditText fields
-        ipAddressNew.setHint("Enter IP Address")
-        usernameNew.setHint("Enter Username")
-        passwordNew.setHint("Enter Password")
+        ipAddressNew.hint = "Enter IP Address"
+        usernameNew.hint = "Enter Username"
+        passwordNew.hint = "Enter Password"
 
         // Set initial values to EditText fields
-        ipAddressNew.setText(ipAddressSSH)
-        usernameNew.setText(usernameSSH)
-        passwordNew.setText(passwordSSH)
+        ipAddressNew.setText(sshViewModel.ipAddressInit)
+        usernameNew.setText(sshViewModel.usernameInit)
+        passwordNew.setText(sshViewModel.passwordInit)
 
         btnConnectListener.setOnClickListener {
             // Get values from EditTexts
@@ -69,14 +64,11 @@ class ConnectionCredentialsSSH : Fragment() {
             val newUsername = usernameNew.text.toString()
             val newPassword = passwordNew.text.toString()
 
-            // Update the SSH credentials
-            ipAddressSSH = newIpAddress
-            usernameSSH = newUsername
-            passwordSSH = newPassword
+            // Update the ViewModel
+            sshViewModel.updateCredentials(newIpAddress, newUsername, newPassword)
 
-            //Connect to SSH
+            // Connect to SSH
             connectSSHinBG("ls -l")
-
         }
 
         // Toggle password visible or hidden
@@ -85,7 +77,7 @@ class ConnectionCredentialsSSH : Fragment() {
         }
     }
 
-    // password visibility toggle logic
+    // Password visibility toggle logic
     private fun togglePasswordVisibility() {
         if (isPasswordVisible) {
             // Hide the password
@@ -101,32 +93,29 @@ class ConnectionCredentialsSSH : Fragment() {
         isPasswordVisible = !isPasswordVisible
     }
 
-    //SSH Connection
-    @OptIn(DelicateCoroutinesApi::class)
-    fun connectSSHinBG(command: String) {
-        GlobalScope.launch(Dispatchers.Main) {
+    // SSH Connection
+    private fun connectSSHinBG(command: String) {
+        viewLifecycleOwner.lifecycleScope.launch {
             val result = withContext(Dispatchers.IO) {
-
-                SSHConnectExec().connectSSH(command) // Call the suspend function here
+                SSHConnect(sshViewModel).connectSSH(command, "exec")
             }
-            // Handle the result here
-            Log.d(ContentValues.TAG, "SSH output: $result")
-
-            //show messages or connection status
-            // change to (result == "true") after debug
-            if (result != "true") {
-                // Proceed to next fragment and Initialize ROS
-                ShowToastPopup(
-                    (context as Activity),
-                    layoutInflater
-                ).showToast("Connection Success")
-                // Move to next fragment. Move this to true case once done debug or during testing
-                findNavController().navigate(R.id.action_connectionCredentialsSSH_to_ThirdFragment)
-            } else {
-                ShowToastPopup((context as Activity), layoutInflater).showToast(result)
+            // Handle the result on the main thread
+            if (isAdded) { // Ensure the fragment is still attached
+                handleSSHResult(result)
             }
         }
     }
 
+    private fun handleSSHResult(result: String) {
+        // Handle the result of the SSH command, possibly updating LiveData or UI elements
+        if (result != "true") {
+            // Proceed to next fragment and Initialize ROS
+            ShowToastPopup(requireActivity(), layoutInflater).showToast("Connection Success")
+            // Move to next fragment. Move this to true case once done debug or during testing
+            findNavController().navigate(R.id.action_connectionCredentialsSSH_to_ThirdFragment)
+        } else {
+            ShowToastPopup(requireActivity(), layoutInflater).showToast(result)
+        }
+    }
 }
 

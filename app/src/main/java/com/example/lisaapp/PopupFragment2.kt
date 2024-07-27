@@ -12,19 +12,23 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.activityViewModels
+import com.example.lisaapp.sub.SSHConnect
+import com.example.lisaapp.sub.SSHViewModel
 import java.util.Locale
 
 
-class PopupFragment2 (private val goToString: String) : DialogFragment(), TextToSpeech.OnInitListener {
+class PopupFragment2 (private val goToString: String, private val locationText: String) : DialogFragment() {
 
-    private lateinit var tts: TextToSpeech
     private lateinit var destinationText : TextView
     private lateinit var btnDone : Button
+    private val sshViewModel: SSHViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_popup2, container, false)
     }
@@ -36,13 +40,13 @@ class PopupFragment2 (private val goToString: String) : DialogFragment(), TextTo
         destinationText = view.findViewById(R.id.toDestination)
         btnDone = view.findViewById(R.id.btn_done)
 
-        tts = TextToSpeech(requireContext(), this)
-
         if (goToString == PopupFragment3().homePositionText) {
             destinationText.text = goToString
         } else {
-            destinationText.text = "Moving to $goToString"
+            destinationText.text = "Moving to $locationText"
         }
+
+        (activity as? MainActivity)?.dialogText?.value = destinationText.text.toString()
 
         btnDone.setOnClickListener {
             dismiss()
@@ -54,44 +58,11 @@ class PopupFragment2 (private val goToString: String) : DialogFragment(), TextTo
     }
 
     override fun onDestroy() {
-        // Shutdown TextToSpeech when the fragment is destroyed
-        if (::tts.isInitialized) {
-            tts.stop()
-            tts.shutdown()
-        }
         super.onDestroy()
-    }
-
-    override fun onInit(status: Int) {
-        if (status == TextToSpeech.SUCCESS) {
-            val result = tts.setLanguage(Locale.US)
-
-            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                Log.e("TTS", "The Language specified is not supported!")
-            } else {
-                Log.i("TTS", "TextToSpeech Initialized")
-
-                // Change voice characteristics here
-                val pitch = 1.2f // Change pitch level
-                val speed = 0.8f // Change speech speed
-
-                val voice = Voice(null, Locale.US, Voice.QUALITY_HIGH, Voice.LATENCY_NORMAL, false, null)
-                tts.voice = voice
-
-                tts.setPitch(pitch)
-                tts.setSpeechRate(speed)
-
-                // Now you can use the TTS engine
-            }
-        } else {
-            Log.e("TTS", "Initialization Failed!")
-        }
-        // Speak the destination text
-        speakOut(destinationText.text.toString())
-    }
-
-    private fun speakOut(text: String) {
-        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "")
+        // StopTextToSpeech when the fragment is destroyed
+        (activity as? MainActivity)?.ttsStop()
+        //Close SSH session
+        SSHConnect(sshViewModel).disconnectSession()
     }
 
 }

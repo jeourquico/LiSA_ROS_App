@@ -3,4 +3,5 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="UST_yellow"> #FEC43D</color>
+    <color name="UST_yellow_90"> #E6C43D</color>
 </resources>

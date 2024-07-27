@@ -4,10 +4,13 @@
     tools:ignore="ExtraText">
     <uses-permission android:name="android.permission.INTERNET"/> // add to enable SSH / imports that use wifi
     <uses-permission android:name="android.permission.RECORD_AUDIO"/> // add to enable TTS
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+
 
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
+        android:enableOnBackInvokedCallback="true"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/lisa_robot_launcher"
         android:label="@string/app_name"

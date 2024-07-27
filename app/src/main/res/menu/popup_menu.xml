@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_one"
+        android:icon="@drawable/lisa_robot_3"
+        android:title="Action One" />
+    <item
+        android:id="@+id/action_two"
+        android:icon="@drawable/lisa_robot_3"
+        android:title="Action Two" />
+    <item
+        android:id="@+id/action_three"
+        android:icon="@drawable/lisa_robot_3"
+        android:title="Action Three" />
+</menu>

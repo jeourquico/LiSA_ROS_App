@@ -26,6 +26,7 @@ class ThirdFragment : Fragment() {
 
     private var clicked = false
     private var langSwitch = false
+    private val langSelected = FirstFragment.DataHolder.langSelected
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -36,6 +37,11 @@ class ThirdFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
+        if (langSelected == "English") {
+            langSwitch = false
+        } else {
+            langSwitch = true
+        }
         _binding = FragmentThirdBinding.inflate(inflater, container, false)
         return binding.root
 
@@ -53,17 +59,19 @@ class ThirdFragment : Fragment() {
 
         binding.firstActionFab.setOnClickListener {
             langSwitch = !langSwitch
-            if (langSwitch) {
+            if (!langSwitch) {
                 (activity as? MainActivity)?.setTtsLanguage(Locale.US)
                 ShowToastPopup(requireContext(),
                     layoutInflater
                 ).showToast("Language changed to ENGLISH")
+                (activity as? MainActivity)?.dialogText?.value = "Language changed to ENGLISH"
             } else {
                 (activity as? MainActivity)?.setTtsLanguage(Locale("tl", "PH"))
                 ShowToastPopup(
                     requireContext(),
                     layoutInflater
                 ).showToast("Language changed to TAGALOG")
+                (activity as? MainActivity)?.dialogText?.value = "Language changed to TAGALOG"
             }
         }
 

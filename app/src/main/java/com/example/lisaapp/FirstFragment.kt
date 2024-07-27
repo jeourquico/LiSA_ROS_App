@@ -12,8 +12,8 @@ import android.widget.ArrayAdapter
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import com.example.lisaapp.FirstFragment.DataHolder.langSelected
 import com.example.lisaapp.databinding.FragmentFirstBinding
 import com.example.lisaapp.sub.SSHConnect
 import com.example.lisaapp.sub.SSHViewModel
@@ -31,8 +31,6 @@ class FirstFragment : Fragment() {
     private var _binding: FragmentFirstBinding? = null
     private val dialog = "Hello! I'm happy to help you today"
     private val binding get() = _binding!!
-
-    val languageList = arrayListOf("English", "Filipino")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,16 +50,23 @@ class FirstFragment : Fragment() {
         // Set up the Spinner for language selection
         setupLanguageSpinner()
         // Observe TTS initialization status
-        (activity as? MainActivity)?.ttsInitializationStatus?.observe(viewLifecycleOwner, Observer { isInitialized ->
+        (activity as? MainActivity)?.ttsInitializationStatus?.observe(viewLifecycleOwner
+        ) { isInitialized ->
             if (isInitialized) {
                 // TTS is initialized
                 (activity as? MainActivity)?.dialogText?.value = dialog
             }
-        })
+        }
 
         // Connect to ROS
         binding.btnConnectSSH.setOnClickListener {
             connectSSHinBG("ls -l")
+
+            langSelected?.let { it1 ->
+                ShowToastPopup(requireContext(), layoutInflater).showToast(
+                    it1
+                )
+            }
         }
 
         // Move to Fragment: Manual Connect
@@ -113,11 +118,18 @@ class FirstFragment : Fragment() {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 val selectedLanguage = languages[position].first
                 (activity as? MainActivity)?.setTtsLanguage(selectedLanguage)
+                langSelected = binding.languageSpinner.selectedItem.toString()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
                 // Handle case where no language is selected, if necessary
+                langSelected = binding.languageSpinner.selectedItem.toString()
             }
         }
     }
+
+    object DataHolder {
+        var langSelected: String? = null
+    }
+
 }

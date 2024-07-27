@@ -3,8 +3,6 @@ package com.example.lisaapp
 import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.os.Bundle
-import android.speech.tts.TextToSpeech
-import android.speech.tts.Voice
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -22,12 +20,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.Locale
 
 
 class PopupFragment3 : DialogFragment() {
 
-    private lateinit var tts: TextToSpeech
     private lateinit var btnYes : Button
     private lateinit var  btnNo : Button
     private lateinit var  dialogText : TextView

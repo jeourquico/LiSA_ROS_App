@@ -1,25 +1,18 @@
 package com.example.lisaapp
 
+import android.os.Build
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
-import androidx.navigation.NavController
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.lisaapp.databinding.ActivityMainBinding
 import java.util.Locale
 
 class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
-    private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
-    private lateinit var navController: NavController
 
     private lateinit var tts: TextToSpeech
     private var isTtsInitialized = false
@@ -32,13 +25,6 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setSupportActionBar(binding.toolbar)
-
-        // Initialize NavController
-        navController = findNavController(R.id.nav_host_fragment_content_main)
-        appBarConfiguration = AppBarConfiguration(navController.graph)
-        setupActionBarWithNavController(navController, appBarConfiguration)
-
         // Initialize TextToSpeech
         tts = TextToSpeech(this, this)
 
@@ -46,6 +32,20 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         dialogText.observe(this) { text ->
             if (isTtsInitialized) {
                 speakOut(text)
+            }
+        }
+    }
+
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun setTtsLanguage(locale: Locale) {
+        if (isTtsInitialized) {
+            val result = tts.setLanguage(locale)
+            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                Log.e("TTS", "The selected language is not supported.")
+            } else {
+                Log.i("TTS", "TTS Language changed to ${locale.displayName}")
             }
         }
     }
@@ -87,29 +87,4 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
         super.onDestroy()
     }
-
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        return navController.navigateUp(appBarConfiguration)
-                || super.onSupportNavigateUp()
-    }
-
-
 }

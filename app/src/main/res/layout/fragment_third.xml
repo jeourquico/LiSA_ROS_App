@@ -15,7 +15,7 @@
 
             <ImageView
                 android:id="@+id/rosMapZone"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="0dp"
@@ -24,7 +24,7 @@
                 android:layout_marginBottom="0dp"
                 android:contentDescription="Map Image"
                 android:gravity="center"
-                android:src="@drawable/ros_map_demo" />
+                android:src="@drawable/tic_final_edited" />
 
             <ImageButton
                 android:id="@+id/btn_selectDestinationNum1"
@@ -32,7 +32,7 @@
                 android:layout_height="60dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="250dp"
-                android:layout_marginTop="330dp"
+                android:layout_marginTop="200dp"
                 android:layout_marginEnd="60dp"
                 android:background="?android:selectableItemBackground"
                 android:backgroundTint="@null"
@@ -40,7 +40,7 @@
                 android:contentDescription="goal.py"
                 android:focusable="true"
                 android:scaleType="fitXY"
-                android:src="@drawable/pin_1" />
+                android:src="@drawable/lisa_location_1" />
 
             <ImageButton
                 android:id="@+id/btn_selectDestinationNum2"
@@ -48,7 +48,7 @@
                 android:layout_height="60dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="170dp"
-                android:layout_marginTop="340dp"
+                android:layout_marginTop="200dp"
                 android:layout_marginEnd="60dp"
                 android:background="?android:selectableItemBackground"
                 android:backgroundTint="@null"
@@ -56,7 +56,7 @@
                 android:contentDescription="goal1.py"
                 android:focusable="true"
                 android:scaleType="fitXY"
-                android:src="@drawable/pin_2" />
+                android:src="@drawable/lisa_location_2" />
 
             <ImageButton
                 android:id="@+id/btn_selectDestinationNum3"
@@ -65,38 +65,38 @@
                 android:layout_gravity="center_vertical"
                 android:background="?android:selectableItemBackground"
                 android:backgroundTint="@null"
-                android:layout_marginStart="160dp"
-                android:layout_marginTop="250dp"
+                android:layout_marginStart="170dp"
+                android:layout_marginTop="120dp"
                 android:layout_marginEnd="60dp"
                 android:clickable="true"
                 android:contentDescription="goal2.py"
                 android:focusable="true"
                 android:scaleType="fitXY"
-                android:src="@drawable/pin_3" />
+                android:src="@drawable/lisa_location_3" />
 
             <ImageButton
                 android:id="@+id/btn_selectDestinationNum4"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_gravity="center_vertical"
+                android:layout_marginStart="220dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginEnd="50dp"
                 android:background="?android:selectableItemBackground"
                 android:backgroundTint="@null"
-                android:layout_marginStart="200dp"
-                android:layout_marginTop="190dp"
-                android:layout_marginEnd="60dp"
                 android:clickable="true"
                 android:contentDescription="goal3.py"
                 android:focusable="true"
                 android:scaleType="fitXY"
-                android:src="@drawable/pin_4" />
+                android:src="@drawable/lisa_location_4" />
 
             <ImageButton
                 android:id="@+id/btn_selectDestinationNum5"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="130dp"
-                android:layout_marginTop="210dp"
+                android:layout_marginTop="70dp"
                 android:layout_marginEnd="60dp"
                 android:background="?android:selectableItemBackground"
                 android:backgroundTint="@null"
@@ -104,7 +104,7 @@
                 android:contentDescription="pose.py"
                 android:focusable="true"
                 android:scaleType="fitXY"
-                android:src="@drawable/home_icon_yellow" />
+                android:src="@drawable/lisa_home" />
 
         </RelativeLayout>
 

@@ -16,6 +16,27 @@
         android:layout_margin="50dp"
         android:src="@drawable/lisa_robot_welcome" />
 
+    <TextView
+        android:id="@+id/languageTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Select Language"
+        app:layout_constraintBottom_toTopOf="@id/language_spinner"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"  />
+
+    <Spinner
+        android:id="@+id/language_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:entries="@array/language_array"
+        android:gravity="center"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@id/first_connL2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"  />
+
     <LinearLayout
         android:id="@+id/first_connL2"
         android:layout_width="match_parent"
@@ -25,7 +46,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginBottom="50dp">
-
 
         <Button
             android:id="@+id/btn_connectSSH"

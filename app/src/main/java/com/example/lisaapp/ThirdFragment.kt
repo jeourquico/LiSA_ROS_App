@@ -2,6 +2,7 @@ package com.example.lisaapp
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.view.LayoutInflater
@@ -9,10 +10,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.lisaapp.databinding.FragmentThirdBinding
 import com.example.lisaapp.sub.ShowToastPopup
+import java.util.Locale
 
 
 class ThirdFragment : Fragment() {
@@ -22,6 +25,7 @@ class ThirdFragment : Fragment() {
     private val toBottom : Animation by lazy { AnimationUtils.loadAnimation(requireContext(), R.anim.to_bottom_anim) }
 
     private var clicked = false
+    private var langSwitch = false
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -37,6 +41,7 @@ class ThirdFragment : Fragment() {
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -47,7 +52,19 @@ class ThirdFragment : Fragment() {
         }
 
         binding.firstActionFab.setOnClickListener {
-            ShowToastPopup(requireContext(),layoutInflater).showToast("Button for change language")
+            langSwitch = !langSwitch
+            if (langSwitch) {
+                (activity as? MainActivity)?.setTtsLanguage(Locale.US)
+                ShowToastPopup(requireContext(),
+                    layoutInflater
+                ).showToast("Language changed to ENGLISH")
+            } else {
+                (activity as? MainActivity)?.setTtsLanguage(Locale("tl", "PH"))
+                ShowToastPopup(
+                    requireContext(),
+                    layoutInflater
+                ).showToast("Language changed to TAGALOG")
+            }
         }
 
         binding.secondActionFab.setOnClickListener {

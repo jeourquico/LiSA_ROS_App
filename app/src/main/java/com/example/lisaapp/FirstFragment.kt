@@ -1,11 +1,15 @@
 package com.example.lisaapp
 
 import android.content.ContentValues
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -19,6 +23,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.Locale
 
 class FirstFragment : Fragment() {
 
@@ -26,6 +31,8 @@ class FirstFragment : Fragment() {
     private var _binding: FragmentFirstBinding? = null
     private val dialog = "Hello! I'm happy to help you today"
     private val binding get() = _binding!!
+
+    val languageList = arrayListOf("English", "Filipino")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,6 +49,8 @@ class FirstFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Set up the Spinner for language selection
+        setupLanguageSpinner()
         // Observe TTS initialization status
         (activity as? MainActivity)?.ttsInitializationStatus?.observe(viewLifecycleOwner, Observer { isInitialized ->
             if (isInitialized) {
@@ -85,6 +94,29 @@ class FirstFragment : Fragment() {
             } else {
                 ShowToastPopup(requireContext(), layoutInflater).showToast(result)
                 binding.txtBtnManualConnect.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    fun setupLanguageSpinner() {
+        val languages = arrayOf(
+            Locale.US to "English",
+            Locale("tl", "PH") to "Filipino"
+        )
+
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, languages.map { it.second })
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.languageSpinner.adapter = adapter
+
+        binding.languageSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            @RequiresApi(Build.VERSION_CODES.O)
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                val selectedLanguage = languages[position].first
+                (activity as? MainActivity)?.setTtsLanguage(selectedLanguage)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // Handle case where no language is selected, if necessary
             }
         }
     }

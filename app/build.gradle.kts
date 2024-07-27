@@ -51,4 +51,5 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
     implementation("com.jcraft:jsch:0.1.55")
     implementation("com.github.chrisbanes:PhotoView:2.3.0")
+    implementation("com.squareup.okhttp3:okhttp:4.10.0")
 }

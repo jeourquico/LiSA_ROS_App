@@ -13,6 +13,7 @@ import android.view.animation.AnimationUtils
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.lisaapp.databinding.FragmentThirdBinding
 import com.example.lisaapp.sub.ShowToastPopup
 import java.util.Locale
@@ -76,7 +77,8 @@ class ThirdFragment : Fragment() {
         }
 
         binding.secondActionFab.setOnClickListener {
-            ShowToastPopup(requireContext(),layoutInflater).showToast("Button for roam")
+            // Move to roam selector fragment
+            findNavController().navigate(R.id.action_ThirdFragment_to_roamSelector)
         }
 
         binding.thirdActionFab.setOnClickListener {

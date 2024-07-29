@@ -5,33 +5,30 @@
     android:layout_height="wrap_content"
     android:padding="16dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".RoamSelector">
+    tools:context=".PopupFragment2">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ROAM SELECTOR"
-        tools:ignore="MissingConstraints" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/toDestinationRecyclerView"
+        android:id="@+id/toDestination"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        android:padding="8dp"
+        android:gravity="center"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="Moving to 'DESTINATION'"
+        android:textSize="20sp" />
 
 
     <Button
-        android:id="@+id/btn_goRoam"
+        android:id="@+id/btn_done"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Done"
         android:layout_marginTop="20dp"
-        android:layout_marginStart="90dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toDestinationRecyclerView" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toDestination" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

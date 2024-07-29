@@ -52,7 +52,7 @@ class SSHConnect (private val sshViewModel: SSHViewModel) {
                 session.connect(100)
 
                 // Execute a command over SSH
-                //val command = "ls -l"
+                // val command = "ls -l"
                 executeCommand(session, command, connectionType)
 
                 // Disconnect SSH session
